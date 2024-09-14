@@ -1,0 +1,10 @@
+export const ENV_VARS = {
+  PORT: 'PORT',
+};
+
+export const MONGO_DB_VARS = {
+  MONGO_USER: 'MONGO_USER',
+  MONGO_PASSWORLD: 'MONGO_PASSWORLD',
+  MONGODB_URL: 'MONGODB_URL',
+  MONGODB_DB: 'MONGODB_DB',
+};
