@@ -11,7 +11,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../widdlewares/isValidId.js';
 import { validateBody } from '../widdlewares/validateBody.js';
 import { createContactSchemaValidation } from '../validation/createContactSchemaValidation.js';
-import { updateContactSchemaValidation } from '../validation/UpdateContactSchemaValidation.js';
+import { updateContactSchemaValidation } from '../validation/updateContactSchemaValidation.js';
 
 const router = Router();
 
