@@ -1,18 +1,20 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
 import { ENV_VARS } from './constants/index.js';
 import { errorHandler } from './widdlewares/errorHandler.js';
 import { notFoundHandler } from './widdlewares/notFoundHandler.js';
-import router from './routers/contacts.js';
+
+import rootRouter from './routers/index.js';
 
 const PORT = Number(env(ENV_VARS.PORT, '3000'));
 
 export const setupServer = () => {
   const app = express();
 
-  // app.use(express.json());
+  app.use(express.json());
 
   app.use(
     pino({
@@ -24,13 +26,15 @@ export const setupServer = () => {
 
   app.use(cors());
 
+  app.use(cookieParser());
+
   app.use(
     express.json({
       type: ['application/json', 'application/vnd.api+json'],
     }),
   );
 
-  app.use(router);
+  app.use(rootRouter);
 
   app.use(notFoundHandler);
 

@@ -58,7 +58,8 @@ export const deleteContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body);
+  const contact = await createContact(req.body, req.user._id);
+  // const contact = await createContact(req.body);
 
   if (!contact) {
     next(createHttpError(404, `Contact not found`));
