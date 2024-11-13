@@ -49,6 +49,7 @@ export const loginUser = async (payload) => {
   await Session.deleteOne({ userId: user._id });
 
   const session = await Session.create({
+    userId: user._id,
     ...createSession(),
   });
 

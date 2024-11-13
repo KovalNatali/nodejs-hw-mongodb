@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import { User } from './user.js';
 
 const contactShema = new Schema(
   {
@@ -27,7 +28,7 @@ const contactShema = new Schema(
       default: 'personal',
     },
 
-    // userId: { type: Schema.ObjectId, required: true },
+    userId: { type: Schema.ObjectId, required: true, ref: User },
   },
   {
     timestamps: true,
