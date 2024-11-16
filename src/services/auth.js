@@ -11,8 +11,8 @@ import {
 const createSession = () => ({
   accessToken: crypto.randomBytes(24).toString('base64'),
   refreshToken: crypto.randomBytes(24).toString('base64'),
-  accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_LIVE_TIME),
-  refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_LIVE_TIME),
+  accessTokenValidUntil: Date.now() + ACCESS_TOKEN_LIVE_TIME,
+  refreshTokenValidUntil: Date.now() + REFRESH_TOKEN_LIVE_TIME,
 });
 
 const findUserByEmail = async (email) => await User.findOne({ email });

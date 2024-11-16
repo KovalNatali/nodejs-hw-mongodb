@@ -4,11 +4,17 @@ export const getAllContacts = async ({
   page = 1,
   perPage = 10,
   sortOrder = 'asc',
-  sortBy = 'name',
+  sortBy = '_id',
   filter = {},
+  userId,
 }) => {
   const skip = (page - 1) * perPage;
-  const contactsQuery = contactsModel.find();
+
+  const contactsQuery = contactsModel.find({ userId });
+
+  if (filter.userId) {
+    contactsQuery.where('userId').equals(filter.userId);
+  }
 
   if (filter.isFavourite || filter.isFavourite === false) {
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
@@ -19,14 +25,12 @@ export const getAllContacts = async ({
   }
 
   const [contactCount, contacts] = await Promise.all([
-    // contactsModel.countDocuments(),
     contactsModel.find().merge(contactsQuery).countDocuments(),
-    contactsModel
-      .find()
-      .merge(contactsQuery)
+    contactsQuery
       .skip(skip)
       .limit(perPage)
-      .sort({ [sortBy]: sortOrder }),
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
   ]);
 
   const totalPages = Math.ceil(contactCount / perPage);
@@ -44,13 +48,17 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = async (contactId) => {
-  const contact = await contactsModel.findById(contactId);
+export const getContactById = async (contactId, userId) => {
+  const contact = await contactsModel.findOne({ _id: contactId, userId });
   return contact;
 };
 
-export const deleteContactById = async (contactId) => {
-  const contact = await contactsModel.findByIdAndDelete(contactId);
+export const deleteContactById = async (contactId, userId) => {
+  const contact = await contactsModel.findOneAndDelete({
+    _id: contactId,
+    userId,
+  });
+
   return contact;
 };
 
@@ -59,9 +67,14 @@ export const createContact = async (payload, userId) => {
   return contact;
 };
 
-export const updateContact = async (contactId, payload, options = {}) => {
-  const rawResult = await contactsModel.findByIdAndUpdate(
-    { _id: contactId },
+export const updateContact = async (
+  contactId,
+  userId,
+  payload,
+  options = {},
+) => {
+  const rawResult = await contactsModel.findOneAndUpdate(
+    { _id: contactId, userId },
     payload,
     { new: true, includeResultMetadata: true, ...options },
   );
