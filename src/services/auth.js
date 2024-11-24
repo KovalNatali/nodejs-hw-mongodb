@@ -3,10 +3,17 @@ import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
+import jwt from 'jsonwebtoken';
+import { env } from '../utils/env.js';
+import { ENV_VARS } from '../constants/index.js';
+import { sendEmail } from '../utils/emailClient.js';
+
 import {
   ACCESS_TOKEN_LIVE_TIME,
   REFRESH_TOKEN_LIVE_TIME,
 } from '../constants/time.js';
+
+// import { generateResetPasswordEmail } from '../utils/generateResetPaswordEmail.js';
 
 const createSession = () => ({
   accessToken: crypto.randomBytes(24).toString('base64'),
@@ -83,4 +90,53 @@ export const refreshSession = async (sessionId, sessionToken) => {
     ...createSession(),
   });
   return newcreateSession;
+};
+
+export const sendResetPasswordToken = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env('JWT_SECRET'),
+    { expiresIn: '15m' },
+  );
+  try {
+    await sendEmail({
+      from: env(ENV_VARS.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password!',
+      html: `<p>Click <a href="${resetToken}">here</a>to reset your password! </p>`,
+    });
+  } catch (error) {
+    console.log(error);
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+
+  // try {
+  //   await emailClient.sendEmail({
+  //     from: env(ENV_VARS.SMTP_FROM),
+  //     to: email,
+  //     html: generateResetPasswordEmail({
+  //       name: user.name,
+  //       resetLink: 'https://google.com ',
+  //     }),
+  //     subject: 'Reset your password!',
+  //   });
+  // } catch (err) {
+  //   console.log(err);
+  //   throw createHttpError(
+  //     500,
+  //     'Failed to send the email, please try again later.',
+  //   );
+  // }
 };

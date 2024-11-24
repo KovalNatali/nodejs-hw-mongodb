@@ -5,10 +5,12 @@ import {
   logoutUserController,
   refreshUserController,
   registerUserController,
+  requestResetPasswordTokenController,
 } from '../controllers/auth.js';
 import { validateBody } from '../widdlewares/validateBody.js';
 import { registerUserSchemaValidation } from '../validation/registerUserSchemaValidation.js';
 import { loginUserSchemaValidation } from '../validation/loginUserSchemaValidation.js';
+import { requestResetPasswordTokenValidationSchema } from '../validation/requestResetPasswordTokenSchema.js';
 
 const authRouter = Router();
 
@@ -28,4 +30,18 @@ authRouter.post('/logout', ctrlWrapper(logoutUserController));
 
 authRouter.post('/refresh', ctrlWrapper(refreshUserController));
 
+authRouter.post(
+  '/send-reset-email',
+  validateBody(requestResetPasswordTokenValidationSchema),
+  ctrlWrapper(requestResetPasswordTokenController),
+);
+
+authRouter.post('/reset-password', ctrlWrapper());
+
 export default authRouter;
+
+// {
+//   "name":"Tull Mon",
+//   "email": "koval_natashenka@ukr.net",
+//   "password": "111770098906"
+//   }
