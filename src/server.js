@@ -3,7 +3,7 @@ import pino from 'pino-http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { env } from './utils/env.js';
-import { ENV_VARS } from './constants/index.js';
+import { ENV_VARS, UPLOAD_DIR } from './constants/index.js';
 import { errorHandler } from './widdlewares/errorHandler.js';
 import { notFoundHandler } from './widdlewares/notFoundHandler.js';
 
@@ -33,6 +33,8 @@ export const setupServer = () => {
       type: ['application/json', 'application/vnd.api+json'],
     }),
   );
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.use(rootRouter);
 

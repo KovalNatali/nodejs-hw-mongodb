@@ -13,6 +13,7 @@ import { validateBody } from '../widdlewares/validateBody.js';
 import { createContactSchemaValidation } from '../validation/createContactSchemaValidation.js';
 import { updateContactSchemaValidation } from '../validation/updateContactSchemaValidation.js';
 import { authenticate } from '../widdlewares/authenticate.js';
+import { upload } from '../widdlewares/upload.js';
 
 const router = Router();
 
@@ -26,12 +27,14 @@ router.get('/:contactId', ctrlWrapper(getContactByIdController));
 
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(createContactSchemaValidation),
   ctrlWrapper(createContactController),
 );
 
 router.patch(
   '/:contactId',
+  upload.single('photo'),
   validateBody(updateContactSchemaValidation),
   ctrlWrapper(patchContactController),
 );

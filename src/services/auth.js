@@ -4,8 +4,11 @@ import crypto from 'node:crypto';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import jwt from 'jsonwebtoken';
+import fs from 'fs/promises';
+import handlebars from 'handlebars';
+import path from 'node:path';
 import { env } from '../utils/env.js';
-import { ENV_VARS } from '../constants/index.js';
+import { ENV_VARS, TEMPLATES_DIR } from '../constants/index.js';
 import { sendEmail } from '../utils/emailClient.js';
 
 import {
@@ -104,15 +107,31 @@ export const sendResetPasswordToken = async (email) => {
       sub: user._id,
       email,
     },
-    env('JWT_SECRET'),
+    env(ENV_VARS.JWT_SECRET),
     { expiresIn: '15m' },
   );
+
+  const resetPasswordTemplatePath = path.join(
+    TEMPLATES_DIR,
+    'send-reset-password-email.html',
+  );
+
+  const templateSource = (
+    await fs.readFile(resetPasswordTemplatePath)
+  ).toString();
+
+  const template = handlebars.compile(templateSource);
+  const html = template({
+    name: user.name,
+    link: `${env(ENV_VARS.FRONTEND_HOST)}/reset-password?token=${resetToken}`,
+  });
+
   try {
     await sendEmail({
       from: env(ENV_VARS.SMTP_FROM),
       to: email,
       subject: 'Reset your password!',
-      html: `<p>Click <a href="${resetToken}">here</a>to reset your password! </p>`,
+      html,
     });
   } catch (error) {
     console.log(error);
@@ -121,22 +140,25 @@ export const sendResetPasswordToken = async (email) => {
       'Failed to send the email, please try again later.',
     );
   }
+};
 
-  // try {
-  //   await emailClient.sendEmail({
-  //     from: env(ENV_VARS.SMTP_FROM),
-  //     to: email,
-  //     html: generateResetPasswordEmail({
-  //       name: user.name,
-  //       resetLink: 'https://google.com ',
-  //     }),
-  //     subject: 'Reset your password!',
-  //   });
-  // } catch (err) {
-  //   console.log(err);
-  //   throw createHttpError(
-  //     500,
-  //     'Failed to send the email, please try again later.',
-  //   );
-  // }
+export const resetPassword = async (payload) => {
+  let entries;
+  try {
+    entries = jwt.verify(payload.token, env(ENV_VARS.JWT_SECRET));
+  } catch (error) {
+    if (error instanceof Error) throw createHttpError(401, error.message);
+    throw error;
+  }
+
+  const user = await User.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+  await User.updateOne({ _id: user._id }, { password: encryptedPassword });
 };

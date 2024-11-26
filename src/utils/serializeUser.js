@@ -4,5 +4,5 @@ export const serializeUser = (user) => ({
   id: user._id,
   createdAt: user.createdAt,
   updatedAt: user.updatedAt,
-  avatarUrl: user.avatarUrl,
+  photoUrl: user.photoUrl,
 });

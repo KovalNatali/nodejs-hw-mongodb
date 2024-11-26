@@ -1,4 +1,8 @@
+// import { saveFileToLocalMachine } from '../utils/saveFileToLocalMachine.js';
+
 import { contactsModel } from '../db/models/contacts.js';
+
+import { saveImageToCloudinary } from '../utils/saveImageToCloudinary.js';
 
 export const getAllContacts = async ({
   page = 1,
@@ -62,8 +66,16 @@ export const deleteContactById = async (contactId, userId) => {
   return contact;
 };
 
-export const createContact = async (payload, userId) => {
-  const contact = await contactsModel.create({ ...payload, userId });
+export const createContact = async ({ photo, ...payload }, userId) => {
+  // const url = await saveFileToLocalMachine(photo);
+
+  const url = await saveImageToCloudinary(photo);
+
+  const contact = await contactsModel.create({
+    ...payload,
+    userId,
+    photoUrl: url,
+  });
   return contact;
 };
 

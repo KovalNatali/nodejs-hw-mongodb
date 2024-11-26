@@ -60,7 +60,9 @@ export const deleteContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body, req.user._id);
+  const { body, file } = req;
+
+  const contact = await createContact({ ...body, photo: file }, req.user._id);
 
   if (!contact) {
     next(createHttpError(404, `Contact not found`));

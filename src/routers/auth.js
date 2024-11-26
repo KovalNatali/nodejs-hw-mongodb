@@ -6,11 +6,13 @@ import {
   refreshUserController,
   registerUserController,
   requestResetPasswordTokenController,
+  resetPasswordController,
 } from '../controllers/auth.js';
 import { validateBody } from '../widdlewares/validateBody.js';
 import { registerUserSchemaValidation } from '../validation/registerUserSchemaValidation.js';
 import { loginUserSchemaValidation } from '../validation/loginUserSchemaValidation.js';
 import { requestResetPasswordTokenValidationSchema } from '../validation/requestResetPasswordTokenSchema.js';
+import { resetPasswordSchema } from '../validation/resetPasswordSchema.js';
 
 const authRouter = Router();
 
@@ -36,12 +38,10 @@ authRouter.post(
   ctrlWrapper(requestResetPasswordTokenController),
 );
 
-authRouter.post('/reset-password', ctrlWrapper());
+authRouter.post(
+  '/reset-password',
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(resetPasswordController),
+);
 
 export default authRouter;
-
-// {
-//   "name":"Tull Mon",
-//   "email": "koval_natashenka@ukr.net",
-//   "password": "111770098906"
-//   }
