@@ -74,7 +74,7 @@ export const createContact = async ({ photo, ...payload }, userId) => {
   const contact = await contactsModel.create({
     ...payload,
     userId,
-    photoUrl: url,
+    photo: url,
   });
   return contact;
 };
