@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN_LIVE_TIME } from '../constants/time.js';
 import {
+  loginOrSignupWithGoogle,
   loginUser,
   logoutUser,
   refreshSession,
@@ -7,6 +8,7 @@ import {
   resetPassword,
   sendResetPasswordToken,
 } from '../services/auth.js';
+import { generateOAuthURL } from '../utils/googleOAuth.js';
 import { serializeUser } from '../utils/serializeUser.js';
 
 const setupSessionCookies = (res, session) => {
@@ -84,5 +86,31 @@ export const resetPasswordController = async (req, res) => {
     status: 200,
     message: 'Password has been successfully reset.',
     data: {},
+  });
+};
+
+export const getOAuthUrlController = (req, res) => {
+  const url = generateOAuthURL();
+
+  res.json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: {
+      url,
+    },
+  });
+};
+
+export const loginWithGoogleController = async (req, res) => {
+  const session = await loginOrSignupWithGoogle(req.body.code);
+
+  setupSessionCookies(res, session);
+
+  res.json({
+    status: 200,
+    message: 'Successfully logged in via Google OAuth!',
+    data: {
+      accessToken: session.accessToken,
+    },
   });
 };
