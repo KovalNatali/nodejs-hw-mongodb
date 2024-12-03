@@ -8,6 +8,7 @@ import { errorHandler } from './widdlewares/errorHandler.js';
 import { notFoundHandler } from './widdlewares/notFoundHandler.js';
 
 import rootRouter from './routers/index.js';
+import { swaggerDocs } from './widdlewares/swaggerDocs.js';
 
 const PORT = Number(env(ENV_VARS.PORT, '3000'));
 
@@ -35,6 +36,8 @@ export const setupServer = () => {
   );
 
   app.use('/uploads', express.static(UPLOAD_DIR));
+
+  app.use('/api-docs', swaggerDocs());
 
   app.use(rootRouter);
 
