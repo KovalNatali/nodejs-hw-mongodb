@@ -1,5 +1,4 @@
 # swagger/paths/contacts/post.yaml
-
 tags:
   - Contacts
 summary: Create contact
@@ -13,12 +12,11 @@ requestBody:
       schema:
         type: object
         required:
-          - _id
           - name
           - phoneNumber
           - email
           - contactType
-          - userId
+
         properties:
           _id:
             description: "Contact's id"

@@ -20,8 +20,6 @@ import {
   validateCode,
 } from '../utils/googleOAuth.js';
 
-// import { generateResetPasswordEmail } from '../utils/generateResetPaswordEmail.js';
-
 const createSession = () => ({
   accessToken: crypto.randomBytes(24).toString('base64'),
   refreshToken: crypto.randomBytes(24).toString('base64'),

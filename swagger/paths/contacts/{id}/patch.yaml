@@ -20,12 +20,11 @@ requestBody:
       schema:
         type: object
         required:
-          - _id
           - name
           - phoneNumber
           - email
           - contactType
-          - userId
+
         properties:
           name:
             description: "Contact's name"
@@ -71,5 +70,6 @@ responses:
               example: 'Successfully update a contact!'
             data:
               type: object
+              $ref: ../../../components/schemas/contacts.yaml
   '401':
     $ref: ../../../components/responeses/401.yaml

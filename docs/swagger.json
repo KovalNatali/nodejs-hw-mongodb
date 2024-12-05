@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "https://example.com/api/v1"
+      "url": "https://nodejs-hw-mongodb-7-lip3.onrender.com"
     }
   ],
   "tags": [
@@ -151,7 +151,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "65e4decdd286b30065d54af9"
+              "example": "65ca67e7ae7f10c88b598384"
             }
           }
         ],
@@ -177,13 +177,13 @@
                       "example": "Successfully found contact with id 65ca67e7ae7f10c88b598384!"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "$ref": "#/components/schemas/contacts"
                     }
                   }
                 }
               }
-            },
-            "$ref": "#/components/responses/contacts"
+            }
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -222,12 +222,10 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "_id",
                   "name",
                   "phoneNumber",
                   "email",
-                  "contactType",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
@@ -291,7 +289,8 @@
                       "example": "Successfully update a contact!"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "$ref": "#/components/schemas/contacts"
                     }
                   }
                 }
@@ -300,6 +299,38 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete contact by id",
+        "operationId": "deleteContact",
+        "description": "Delete contact by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete contact by id"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
@@ -453,12 +484,10 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "_id",
                   "name",
                   "phoneNumber",
                   "email",
-                  "contactType",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "_id": {
@@ -626,63 +655,6 @@
                 }
               }
             }
-          }
-        }
-      },
-      "contacts": {
-        "type": "object",
-        "required": [
-          "_id",
-          "name",
-          "phoneNumber",
-          "email",
-          "contactType",
-          "userId"
-        ],
-        "properties": {
-          "_id": {
-            "description": "Contact's id",
-            "type": "string",
-            "example": "65e4decdd286b30065d54af9"
-          },
-          "name": {
-            "description": "Contact's name",
-            "type": "string",
-            "example": "John Doe"
-          },
-          "phoneNumber": {
-            "description": "Contact's phone number",
-            "type": "number",
-            "example": 380123456789
-          },
-          "email": {
-            "description": "Contact's email",
-            "type": "string",
-            "example": "john@gmail.com"
-          },
-          "isFavourite": {
-            "description": "'Contact's favourite",
-            "type": "boolean",
-            "example": false
-          },
-          "contactType": {
-            "description": "Contact's type",
-            "type": "string",
-            "enum": [
-              "work",
-              "home",
-              "personal"
-            ]
-          },
-          "userId": {
-            "description": "Contact's user id",
-            "type": "string",
-            "example": "65e4decdd286b30065d54af9"
-          },
-          "photo": {
-            "description": "Link to contact's photo",
-            "type": "string",
-            "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
           }
         }
       }
