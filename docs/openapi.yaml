@@ -14,7 +14,7 @@ tags:
     description: Auth operations.
 servers:
   - url: http://localhost:3000
-  - url: https://nodejs-hw-mongodb-7-lip3.onrender.com
+  - url: https://nodejs-hw-mongodb-7a-lip3.onrender.com
 paths:
   /auth/login:
     post:
