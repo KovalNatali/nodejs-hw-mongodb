@@ -19,12 +19,6 @@ requestBody:
     multipart/form-data:
       schema:
         type: object
-        required:
-          - name
-          - phoneNumber
-          - email
-          - contactType
-
         properties:
           name:
             description: "Contact's name"
@@ -70,6 +64,5 @@ responses:
               example: 'Successfully update a contact!'
             data:
               type: object
-              $ref: ../../../components/schemas/contacts.yaml
   '401':
     $ref: ../../../components/responeses/401.yaml

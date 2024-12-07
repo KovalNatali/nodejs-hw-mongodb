@@ -221,12 +221,6 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "phoneNumber",
-                  "email",
-                  "contactType"
-                ],
                 "properties": {
                   "name": {
                     "description": "Contact's name",
@@ -289,8 +283,7 @@
                       "example": "Successfully update a contact!"
                     },
                     "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/contacts"
+                      "type": "object"
                     }
                   }
                 }
@@ -486,7 +479,6 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "email",
                   "contactType"
                 ],
                 "properties": {
